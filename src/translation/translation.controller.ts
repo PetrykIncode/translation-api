@@ -6,7 +6,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { GetTransactionsQuery, TranslateDto } from './dto';
+import { GetTransactionsQuery, TranslateDto, TranslationDto } from './dto';
 import { TranslationService } from './services/translation.service';
 
 @ApiTags('Translations')
@@ -20,6 +20,7 @@ export class TranslationController {
   })
   @ApiOkResponse({
     description: 'Translation created successfully',
+    type: TranslationDto,
   })
   @ApiBadRequestResponse({
     description: '`key` and `text` should be unique',
@@ -34,6 +35,8 @@ export class TranslationController {
   })
   @ApiOkResponse({
     description: 'Translations received successfully',
+    type: TranslationDto,
+    isArray: true,
   })
   @Get()
   async getTranslations(@Query() query: GetTransactionsQuery) {

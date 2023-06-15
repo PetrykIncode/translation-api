@@ -17,6 +17,7 @@ import {
 } from '@nestjs/swagger';
 import type { Response } from 'express';
 
+import { GetLanguagesResponse } from './dto';
 import { LanguagesService } from './services/languages.service';
 
 @ApiTags('Languages')
@@ -29,6 +30,8 @@ export class LanguagesController {
   })
   @ApiOkResponse({
     description: 'Languages received successfully',
+    type: GetLanguagesResponse,
+    isArray: true,
   })
   @Get()
   async getLanguagesList() {
