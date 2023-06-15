@@ -11,7 +11,7 @@ Requirements:
 Run database in Docker:
 
 ```shell
-cd dev
+cd docker
 docker-compose up -d
 ```
 
