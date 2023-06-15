@@ -21,6 +21,12 @@ Install dependencies:
 yarn install
 ```
 
+Migrate database:
+
+```shell
+yarn prisma migrate dev
+```
+
 Run seed:
 
 ```shell
