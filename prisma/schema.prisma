@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model LanguageIcon {
+  id        String    @id @default(uuid())
+  icon      Bytes     @db.Blob
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Language  Language?
+
+  @@map("LanguageIcons")
+}
+
+model Language {
+  id          String        @id @default(uuid())
+  code        String        @db.VarChar(2)
+  // icon      String // In case if we will use image hosting
+  icon        LanguageIcon? @relation(fields: [iconId], references: [id])
+  iconId      String?       @unique @db.VarChar(36)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Translation Translation[]
+
+  @@map("Languages")
+}
+
+model Translation {
+  id         String   @id @default(uuid())
+  phrase     String
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId String   @db.VarChar(36)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("Translations")
+}
