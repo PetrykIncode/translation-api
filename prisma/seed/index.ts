@@ -35,8 +35,8 @@ async function checkEnglishLanguageExistance() {
   }
 }
 
-async function index() {
+async function seed() {
   await checkEnglishLanguageExistance();
 }
 
-index();
+seed();

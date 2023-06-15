@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator dbml {
+  provider   = "prisma-dbml-generator"
+  output     = "./"
+  outputName = "schema.dbml"
+}
+
 model LanguageIcon {
   id        String    @id @default(uuid())
   icon      Bytes     @db.Blob
@@ -30,30 +36,42 @@ model Language {
   @@map("Languages")
 }
 
-model Translation {
-  id                 String                            @id @default(uuid())
-  text               String
-  language           Language                          @relation(fields: [languageId], references: [id])
-  languageId         String                            @db.VarChar(36)
-  createdAt          DateTime                          @default(now())
-  updatedAt          DateTime                          @updatedAt
-  translations       TranslationOnDefaultTranslation[] @relation(name: "Translation")
-  defaultTranslation TranslationOnDefaultTranslation[] @relation(name: "DefaultTranslation")
+model TranslationKey {
+  id          String        @id @default(uuid())
+  key         String
+  translation Translation[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
+  @@map("TranslationKeys")
+}
+
+model Translation {
+  id         String         @id @default(uuid())
+  key        TranslationKey @relation(fields: [keyId], references: [id])
+  keyId      String         @db.VarChar(36)
+  text       String
+  code       Language       @relation(fields: [languageId], references: [id])
+  languageId String         @db.VarChar(36)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  // translations       TranslationOnDefaultTranslation[] @relation(name: "Translation")
+  // defaultTranslation TranslationOnDefaultTranslation[] @relation(name: "DefaultTranslation")
   @@map("Translations")
 }
 
-model TranslationOnDefaultTranslation {
-  id String @id @default(uuid())
-
-  translation   Translation @relation("Translation", fields: [translationId], references: [id])
-  translationId String      @db.VarChar(36)
-
-  defaultTranslation   Translation @relation("DefaultTranslation", fields: [defaultTranslationId], references: [id])
-  defaultTranslationId String      @db.VarChar(36)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("TranslationsOnDefaultTranslations")
-}
+// model TranslationOnDefaultTranslation {
+//   id String @id @default(uuid())
+//
+//   translation   Translation @relation("Translation", fields: [translationId], references: [id])
+//   translationId String      @db.VarChar(36)
+//
+//   defaultTranslation   Translation @relation("DefaultTranslation", fields: [defaultTranslationId], references: [id])
+//   defaultTranslationId String      @db.VarChar(36)
+//
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//
+//   @@map("TranslationsOnDefaultTranslations")
+// }
