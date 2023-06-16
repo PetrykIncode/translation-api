@@ -51,7 +51,7 @@ model Translation {
   key        TranslationKey @relation(fields: [keyId], references: [id])
   keyId      String         @db.VarChar(36)
   text       String
-  code       Language       @relation(fields: [languageId], references: [id])
+  language   Language       @relation(fields: [languageId], references: [id])
   languageId String         @db.VarChar(36)
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt

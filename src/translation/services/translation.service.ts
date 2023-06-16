@@ -65,7 +65,15 @@ export class TranslationService {
   async getTranslations(query: GetTransactionsQuery) {
     const translations = await this.prismaService.translationKey.findMany({
       include: {
-        translations: true,
+        translations: {
+          include: {
+            language: {
+              select: {
+                code: true,
+              },
+            },
+          },
+        },
       },
     });
 

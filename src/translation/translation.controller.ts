@@ -45,8 +45,8 @@ export class TranslationController {
   })
   @Get()
   async getTranslations(
-    @Query() query: GetTransactionsQuery,
-  ): Promise<GetTranslationsResponse[]> {
+    @Query() query: GetTransactionsQuery, // : Promise<GetTranslationsResponse[]>
+  ) {
     return this.translationService.getTranslations(query);
   }
 }
