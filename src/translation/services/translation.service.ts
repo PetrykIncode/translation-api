@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { TranslationKey } from '@prisma/client';
+import * as XLSX from 'xlsx';
 
 import { PrismaService } from '../../shared/prisma/prisma.service';
 import {
@@ -101,5 +102,41 @@ export class TranslationService {
       },
       data,
     });
+  }
+
+  async exportTable() {
+    const translations = await this.prismaService.translationKey.findMany({
+      include: {
+        translations: {
+          include: {
+            language: true,
+          },
+        },
+      },
+    });
+
+    const exportTable: Array<Array<string>> = [
+      ['Key', 'Translation', 'Language'],
+    ];
+
+    for (let i = 0; i < translations.length; i++) {
+      for (let j = 0; j < translations[i]?.translations?.length; j++) {
+        exportTable.push([
+          translations[i].key,
+          translations[i].translations[j].text,
+          translations[i].translations[j].language.code,
+        ]);
+      }
+    }
+
+    const workbook = XLSX.utils.book_new();
+
+    const worksheet = XLSX.utils.aoa_to_sheet(exportTable);
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
+
+    const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+    return buffer;
   }
 }

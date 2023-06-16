@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  Res,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -14,6 +15,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import type { Response } from 'express';
 
 import {
   GetTransactionsQuery,
@@ -80,5 +82,29 @@ export class TranslationController {
     @Body() data: PatchTranslationDto,
   ) {
     return this.translationService.patchTranslation(id, data);
+  }
+
+  @ApiOperation({
+    description: 'Export translations into Excel file',
+  })
+  @ApiOkResponse({
+    description: 'File exported successfully',
+  })
+  @Get('export')
+  async exportTable(@Res() res: Response) {
+    const buffer = await this.translationService.exportTable();
+
+    res.set({
+      'Content-Disposition': 'attachment; filename="excel_file.xlsx"',
+      'Content-Type':
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+
+    res.send(buffer);
+  }
+
+  @Post('import')
+  async importTable() {
+    // TODO it
   }
 }
