@@ -203,9 +203,32 @@ export class TranslationService {
       }
     }
 
-    // Save many translations
-    return this.prismaService.translation.createMany({
-      data: saveObject,
-    });
+    // Save or update translations
+
+    for (let i = 0; i < saveObject.length; i++) {
+      const candidate = await this.prismaService.translation.findFirst({
+        where: {
+          languageId: saveObject[i].languageId,
+          keyId: saveObject[i].keyId,
+        },
+      });
+
+      if (candidate) {
+        if (candidate.text !== saveObject[i].text) {
+          await this.prismaService.translation.update({
+            where: {
+              id: candidate.id,
+            },
+            data: {
+              text: saveObject[i].text,
+            },
+          });
+        }
+      } else {
+        await this.prismaService.translation.create({
+          data: saveObject[i],
+        });
+      }
+    }
   }
 }
