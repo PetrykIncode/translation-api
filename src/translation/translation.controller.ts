@@ -9,7 +9,7 @@ import {
 import {
   GetTransactionsQuery,
   GetTranslationsResponse,
-  TranslateDto,
+  MakeTranslateDto,
   TranslationDto,
 } from './dto';
 import { TranslationService } from './services/translation.service';
@@ -31,7 +31,7 @@ export class TranslationController {
     description: '`key` and `text` should be unique',
   })
   @Post()
-  async createTranslation(@Body() data: TranslateDto) {
+  async createTranslation(@Body() data: MakeTranslateDto) {
     return this.translationService.createTranslation(data);
   }
 

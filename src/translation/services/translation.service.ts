@@ -2,13 +2,13 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { TranslationKey } from '@prisma/client';
 
 import { PrismaService } from '../../shared/prisma/prisma.service';
-import { GetTransactionsQuery, TranslateDto } from '../dto';
+import { GetTransactionsQuery, MakeTranslateDto } from '../dto';
 
 @Injectable()
 export class TranslationService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async createTranslation(data: TranslateDto) {
+  async createTranslation(data: MakeTranslateDto) {
     // If language `en` it means we create default translation
     let translationKey: TranslationKey;
 

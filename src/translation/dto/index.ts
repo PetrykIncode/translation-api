@@ -77,7 +77,7 @@ export class TranslationKeyDto implements TranslationKey {
   updatedAt: Date;
 }
 
-export class TranslateDto {
+export class MakeTranslateDto {
   @ApiProperty({
     description: 'Translation key to translate',
     type: String,
