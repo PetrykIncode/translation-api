@@ -17,9 +17,9 @@ export class LanguagesService {
       item.translatedCount = 0;
     });
 
-    for (let i = 0; i < translations.length; i++) {
-      for (let j = 0; j < languages.length; j++) {
-        if (translations[i].languageId === languages[j].id) {
+    for (let i = 0; i < languagesResponse.length; i++) {
+      for (let j = 0; j < translations.length; j++) {
+        if (translations[j].languageId === languagesResponse[i].id) {
           languagesResponse[i].translatedCount += 1;
         }
       }
