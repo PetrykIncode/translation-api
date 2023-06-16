@@ -37,11 +37,11 @@ model Language {
 }
 
 model TranslationKey {
-  id          String        @id @default(uuid())
-  key         String
-  translation Translation[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id           String        @id @default(uuid())
+  key          String
+  translations Translation[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@map("TranslationKeys")
 }
@@ -56,22 +56,5 @@ model Translation {
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
 
-  // translations       TranslationOnDefaultTranslation[] @relation(name: "Translation")
-  // defaultTranslation TranslationOnDefaultTranslation[] @relation(name: "DefaultTranslation")
   @@map("Translations")
 }
-
-// model TranslationOnDefaultTranslation {
-//   id String @id @default(uuid())
-//
-//   translation   Translation @relation("Translation", fields: [translationId], references: [id])
-//   translationId String      @db.VarChar(36)
-//
-//   defaultTranslation   Translation @relation("DefaultTranslation", fields: [defaultTranslationId], references: [id])
-//   defaultTranslationId String      @db.VarChar(36)
-//
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//
-//   @@map("TranslationsOnDefaultTranslations")
-// }

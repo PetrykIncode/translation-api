@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Translation } from '@prisma/client';
+import { Translation, TranslationKey } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
 
@@ -47,7 +47,7 @@ export class TranslationDto implements Translation {
   updatedAt: Date;
 }
 
-export class TranslationKeyDto {
+export class TranslationKeyDto implements TranslationKey {
   @ApiProperty({
     description: 'Translation ID',
     type: String,
@@ -136,5 +136,5 @@ export class GetTranslationsResponse extends TranslationKeyDto {
     type: TranslationDto,
     isArray: true,
   })
-  translation: TranslationDto[];
+  translations: TranslationDto[];
 }
