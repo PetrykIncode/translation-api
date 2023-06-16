@@ -139,4 +139,73 @@ export class TranslationService {
 
     return buffer;
   }
+
+  async importTranslations(data: BufferSource) {
+    const workbook = XLSX.read(data);
+
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    const excelSheetData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+    // Check Excel file header
+    const checkHeader = ['Key', 'Translation', 'Language'];
+
+    for (let i = 0; i < checkHeader.length; i++) {
+      if (excelSheetData[0][i] !== checkHeader[i]) {
+        throw new BadRequestException('Bad Excel file');
+      }
+    }
+
+    // Check languages
+    const languages = await this.prismaService.language.findMany();
+    const languagesList = languages.map((item) => {
+      return item.code;
+    });
+
+    for (let i = 1; i < excelSheetData.length; i++) {
+      if (!languagesList.includes(excelSheetData[i][2])) {
+        throw new BadRequestException('File contains not exists language code');
+      }
+    }
+
+    // Create object with data to save
+    const saveObject = [];
+
+    // Fill out translation keys, texts and languages
+    for (let i = 1; i < excelSheetData.length; i++) {
+      const languageCandidate = await this.prismaService.language.findFirst({
+        where: {
+          code: excelSheetData[i][2],
+        },
+      });
+
+      const keyCandidate = await this.prismaService.translationKey.findFirst({
+        where: {
+          key: excelSheetData[i][0],
+        },
+      });
+
+      saveObject.push({});
+
+      saveObject[i - 1].languageId = languageCandidate.id;
+      saveObject[i - 1].text = excelSheetData[i][1];
+
+      if (keyCandidate) {
+        saveObject[i - 1].keyId = keyCandidate.id;
+      } else {
+        const newKey = await this.prismaService.translationKey.create({
+          data: {
+            key: excelSheetData[i][0],
+          },
+        });
+
+        saveObject[i - 1].keyId = newKey.id;
+      }
+    }
+
+    // Save many translations
+    return this.prismaService.translation.createMany({
+      data: saveObject,
+    });
+  }
 }

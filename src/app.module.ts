@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { MulterModule } from '@nestjs/platform-express';
 
 import { LanguagesController } from './languages/languages.controller';
 import { LanguagesModule } from './languages/languages.module';
@@ -9,6 +10,7 @@ import { TranslationModule } from './translation/translation.module';
 
 @Module({
   imports: [
+    MulterModule.register({}),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['../.env'],

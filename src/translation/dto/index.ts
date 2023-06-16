@@ -148,3 +148,8 @@ export class PatchTranslationDto implements Pick<Translation, 'text'> {
   @IsString()
   readonly text: string;
 }
+
+export class ImportTranslationsDto {
+  @ApiProperty({ type: 'string', format: 'binary', required: true })
+  file: Express.Multer.File;
+}

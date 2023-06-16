@@ -7,9 +7,14 @@ import {
   Post,
   Query,
   Res,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
+  ApiConsumes,
+  ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
@@ -20,6 +25,7 @@ import type { Response } from 'express';
 import {
   GetTransactionsQuery,
   GetTranslationsResponse,
+  ImportTranslationsDto,
   MakeTranslateDto,
   PatchTranslationDto,
   TranslationDto,
@@ -103,8 +109,18 @@ export class TranslationController {
     res.send(buffer);
   }
 
+  @ApiOperation({
+    description: 'Import translations from Excel file',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiCreatedResponse({ description: 'File uploaded successfully' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
+  @UseInterceptors(FileInterceptor('file'))
   @Post('import')
-  async importTable() {
-    // TODO it
+  async importTable(
+    @Body() data: ImportTranslationsDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    await this.translationService.importTranslations(file.buffer);
   }
 }
