@@ -11,6 +11,7 @@ import {
   ApiBadRequestResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 
@@ -68,6 +69,10 @@ export class TranslationController {
   })
   @ApiBadRequestResponse({
     description: 'Translation not exists',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Translation `id`',
   })
   @Patch(':id')
   async patchTranslation(
