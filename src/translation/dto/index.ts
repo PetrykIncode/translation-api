@@ -138,3 +138,13 @@ export class GetTranslationsResponse extends TranslationKeyDto {
   })
   translations: TranslationDto[];
 }
+
+export class PatchTranslationDto implements Pick<Translation, 'text'> {
+  @ApiProperty({
+    description: 'Translation text to update',
+    type: String,
+    example: 'Login',
+  })
+  @IsString()
+  readonly text: string;
+}

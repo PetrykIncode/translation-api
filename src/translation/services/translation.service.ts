@@ -2,7 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { TranslationKey } from '@prisma/client';
 
 import { PrismaService } from '../../shared/prisma/prisma.service';
-import { GetTransactionsQuery, MakeTranslateDto } from '../dto';
+import {
+  GetTransactionsQuery,
+  MakeTranslateDto,
+  PatchTranslationDto,
+} from '../dto';
 
 @Injectable()
 export class TranslationService {
@@ -78,5 +82,24 @@ export class TranslationService {
     });
 
     return translations;
+  }
+
+  async patchTranslation(id: string, data: PatchTranslationDto) {
+    const candidate = await this.prismaService.translation.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!candidate) {
+      throw new BadRequestException('Translation not exists');
+    }
+
+    return this.prismaService.translation.update({
+      where: {
+        id,
+      },
+      data,
+    });
   }
 }

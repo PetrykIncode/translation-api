@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
@@ -10,6 +18,7 @@ import {
   GetTransactionsQuery,
   GetTranslationsResponse,
   MakeTranslateDto,
+  PatchTranslationDto,
   TranslationDto,
 } from './dto';
 import { TranslationService } from './services/translation.service';
@@ -48,5 +57,23 @@ export class TranslationController {
     @Query() query: GetTransactionsQuery, // : Promise<GetTranslationsResponse[]>
   ) {
     return this.translationService.getTranslations(query);
+  }
+
+  @ApiOperation({
+    description: 'Update translation',
+  })
+  @ApiOkResponse({
+    description: 'Translation updated successfully',
+    type: TranslationDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Translation not exists',
+  })
+  @Patch(':id')
+  async patchTranslation(
+    @Param('id') id: string,
+    @Body() data: PatchTranslationDto,
+  ) {
+    return this.translationService.patchTranslation(id, data);
   }
 }
