@@ -7,7 +7,25 @@ export class LanguagesService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getLanguages() {
-    return this.prismaService.language.findMany({});
+    const languages = await this.prismaService.language.findMany({});
+
+    const translations = await this.prismaService.translation.findMany({});
+
+    const languagesResponse = JSON.parse(JSON.stringify([...languages]));
+
+    languagesResponse.forEach((item) => {
+      item.translatedCount = 0;
+    });
+
+    for (let i = 0; i < translations.length; i++) {
+      for (let j = 0; j < languages.length; j++) {
+        if (translations[i].languageId === languages[j].id) {
+          languagesResponse[i].translatedCount += 1;
+        }
+      }
+    }
+
+    return languagesResponse;
   }
 
   async getLanguageIcon(id: string) {

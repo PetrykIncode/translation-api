@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Language } from '@prisma/client';
 
-export class GetLanguagesResponse {
+export class GetLanguagesResponse implements Language {
   @ApiProperty({
     description: 'Language ID',
     type: String,
@@ -21,6 +22,14 @@ export class GetLanguagesResponse {
     example: '627ef959-d2e6-4071-8d67-883f2b6cb6ed',
   })
   readonly iconId: string;
+
+  @ApiProperty({
+    description: 'Number of translated phrases',
+    type: Number,
+    example: 10,
+    default: 0,
+  })
+  readonly translatedCount: number;
 
   @ApiProperty({
     description: 'Time when was created',
