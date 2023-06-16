@@ -6,7 +6,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { GetTransactionsQuery, TranslateDto, TranslationDto } from './dto';
+import {
+  GetTransactionsQuery,
+  GetTranslationsResponse,
+  TranslateDto,
+  TranslationDto,
+} from './dto';
 import { TranslationService } from './services/translation.service';
 
 @ApiTags('Translations')
@@ -35,11 +40,13 @@ export class TranslationController {
   })
   @ApiOkResponse({
     description: 'Translations received successfully',
-    type: TranslationDto,
+    type: GetTranslationsResponse,
     isArray: true,
   })
   @Get()
-  async getTranslations(@Query() query: GetTransactionsQuery) {
+  async getTranslations(
+    @Query() query: GetTransactionsQuery,
+  ): Promise<GetTranslationsResponse[]> {
     return this.translationService.getTranslations(query);
   }
 }

@@ -63,9 +63,10 @@ export class TranslationService {
   }
 
   async getTranslations(query: GetTransactionsQuery) {
-    return this.prismaService.translation.findMany({
-      skip: (query.page || 1) - 1,
-      take: query.limit ?? 100,
+    return this.prismaService.translationKey.findMany({
+      include: {
+        translation: true,
+      },
     });
   }
 }
