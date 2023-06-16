@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
+  // url      = env("DATABASE_URL")
 }
 
 generator dbml {
@@ -15,7 +16,7 @@ generator dbml {
 
 model LanguageIcon {
   id        String    @id @default(uuid())
-  icon      Bytes     @db.Blob
+  icon      Bytes
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Language  Language?
@@ -25,10 +26,10 @@ model LanguageIcon {
 
 model Language {
   id          String        @id @default(uuid())
-  code        String        @db.VarChar(2)
+  code        String
   // icon      String // In case if we will use image hosting
   icon        LanguageIcon? @relation(fields: [iconId], references: [id])
-  iconId      String?       @unique @db.VarChar(36)
+  iconId      String?       @unique
   Translation Translation[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
@@ -49,10 +50,10 @@ model TranslationKey {
 model Translation {
   id         String         @id @default(uuid())
   key        TranslationKey @relation(fields: [keyId], references: [id])
-  keyId      String         @db.VarChar(36)
+  keyId      String
   text       String
   language   Language       @relation(fields: [languageId], references: [id])
-  languageId String         @db.VarChar(36)
+  languageId String
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
 

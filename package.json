@@ -6,12 +6,12 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build": "prisma migrate dev && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -31,6 +31,7 @@
     "cookie-parser": "^1.4.6",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
+    "vercel": "^30.2.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

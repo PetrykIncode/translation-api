@@ -39,3 +39,4 @@ migrations
 
 # DBML file
 schema.dbml
+.vercel
